@@ -1,0 +1,233 @@
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .flexform {
+            margin: 2em auto;
+            padding: 1em;
+            min-height: 400px;
+            font-weight: 400;
+            box-shadow: 5px 5px 20px 5px rgba(20, 20, 58, 0.5);
+        }
+
+        .flexform .flex-group {
+            display: flex;
+            justify-content: space-between;
+            align-content: stretch;
+            flex-direction: row;
+        }
+
+        @media (max-width: 767px) {
+            .flexform .flex-group {
+                flex-direction: column;
+            }
+        }
+
+        .flexform .flex-group input {
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+            width: 100%;
+        }
+
+        .flexform .flex-group label {
+            flex: none;
+        }
+
+        .flexform .flex-group.flex-start {
+            justify-content: flex-start;
+        }
+
+        .select-flexlabel {
+            position: relative;
+            font-weight: inherit;
+            margin-bottom: 1em;
+        }
+
+        .flexform select {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <form class="flexform" action="">
+                    <div class="flex-group">
+                        <div class="sendViaContainer">
+                            <label class="select-flexlabel" for="sendVia" id="sendViaLabel">via
+                                <span class="select-wrap">
+                                    <select class="span-select" name="sendVia" id="sendVia">
+                                        <option value="choose-email">email </option>
+                                        <option value="choose-mobile">mobile </option>
+                                    </select>
+                                </span>
+                            </label>
+                            <div class="choose-email slide-span">
+                                <input type="text" name="emailAddress" id="emailAddress" value="" placeholder="example@email.com" />
+                            </div>
+                            <div class=" choose-mobile slide-span collapse">
+                                <input type="tel" id="mobileNumber" name="mobileNumber" placeholder="123-456-7890">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="flex-group">
+                        <label class="select-flexlabel" for="authSelect">Send code to
+                            <span class="select-wrap">
+                                <select name="authSelect" id="authSelect">
+                                    <option value="authSame" selected="selected">address above </option>
+                                    <option value="authEmail">email address </option>
+                                    <option value="authMobile">mobile number </option>
+                                    <option value="authNone">don't send code </option>
+                                </select>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="flex-group">
+                        <div class="authSame slide-auth">
+                            <label class="select-flexlabel" for="singleAuthAddress" id="singleAuthLabel">example@email.com
+                            </label>
+                            <input type="hidden" id="singleAuthAddress" name="singleAuthAddress" value="">
+                        </div>
+                        <div class="authEmail slide-auth collapse">
+                            <label for="dualAuthEmail"></label>
+                            <input type="text" name="dualAuthEmail" id="dualAuthEmail" value="" placeholder="example@email.com" />
+                        </div>
+                        <div class="authMobile slide-auth collapse">
+                            <label for="dualAuthMobile"></label>
+                            <input type="tel" id="dualAuthMobile" name="dualAuthMobile" placeholder="123-456-7890">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        // Slides in email and mobile fields
+        (function () {
+
+            var animationName = "animated fadeInRight";
+            var collapse = "collapse";
+            var animationEnd = "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend";
+
+
+            var select = document.querySelector(".span-select");
+            var spanSelector = ".slide-span";
+
+            select.addEventListener("change", function () {
+
+                // var value = "." + select.value; // if the element is <input>
+                var value = "." + select.options[select.selectedIndex].value; // if the element is <select> use this line instead
+
+                // initiate items, by deleting last changes
+                document.querySelectorAll(spanSelector).forEach(function (element) {
+                    element.classList.remove(...animationName.split(' '), collapse);
+                });
+
+                // apply the new style
+                document.querySelectorAll(spanSelector + value).forEach(function (element) {
+                    element.classList.add(...animationName.split(' '));
+                });
+                document.querySelectorAll(spanSelector + ":not(" + value + ")").forEach(function (element) {
+                    element.classList.add(collapse);
+                });
+
+
+            });
+
+            var authselect = document.querySelector("#authSelect");
+            var authSlideSelector = ".slide-auth";
+
+            authselect.addEventListener("change", function () {
+
+                // var value = "." + authselect.value; // if the element is <input>
+                var value = "." + authselect.options[authselect.selectedIndex].value; // if the element is <select> use this line instead
+
+                // initiate items, by deleting last changes
+                document.querySelectorAll(authSlideSelector).forEach(function (element) {
+                    element.classList.remove(...animationName.split(' '), collapse);
+                });
+
+                // apply the new style
+                document.querySelectorAll(authSlideSelector + value).forEach(function (element) {
+                    element.classList.add(...animationName.split(' '));
+                });
+                document.querySelectorAll(authSlideSelector + ":not(" + value + ")").forEach(function (element) {
+                    element.classList.add(collapse);
+                });
+
+
+            });
+
+        }());
+
+// Display entered address input
+/* $('#emailAddress').bind('change', function (event, previousText) {
+$('#singleAuthLabel').html($(this).val());
+$("#singleAuthAddress").val($(this).val());
+});
+$('#mobileNumber').bind('change', function (event, previousText) {
+$('#singleAuthLabel').html($(this).val());
+$("#singleAuthAddress").val($(this).val());
+}); */
+    </script>
+
+
+
+    <script>
+// // Slides in email and mobile fields
+// $(function() {
+//   var animationName = "animated fadeInRight";
+//   var collapse = "collapse";
+//   // var animationend =
+//     // "webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend";
+//   var $select = $(".span-select");
+//   var $span = $(".slide-span");
+//   $select.on("change", function() {
+//     var value = "." + $(this).val();
+//     $span
+//       .addClass(animationName).removeClass(collapse)
+//       .not(value)
+//       .removeClass(animationName).addClass(collapse);
+//   });
+//   var $authselect = $("#authSelect");
+//   var $authslide = $(".slide-auth");
+//   $authselect.on("change", function() {
+//     var value = "." + $(this).val();
+//     $authslide
+//       .addClass(animationName).removeClass(collapse)
+//       .not(value)
+//       .removeClass(animationName).addClass(collapse);
+//   });
+// });
+
+// // Display entered address input
+// $('#emailAddress').bind('change', function (event, previousText) {
+//     $('#singleAuthLabel').html($(this).val());
+//     $("#singleAuthAddress").val($(this).val());
+// });
+// $('#mobileNumber').bind('change', function (event, previousText) {
+//     $('#singleAuthLabel').html($(this).val());
+//     $("#singleAuthAddress").val($(this).val());
+// });
+    </script>
+</body>
